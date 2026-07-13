@@ -1,0 +1,48 @@
+{% extends 'base.html'%}
+{% block title %}
+Login
+{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class ="card shadow">
+            <div class="card-header bg-success text-white text-center">
+                <h3>🏥 Clinic Login</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <!--NOn Field Errors-->
+                    {% if form.non_field_errors %}
+                        <div class= "alert alert-danger">
+                            {{ form.non_field_errors}}
+                        </div>
+                    {% endif%}
+                    <!--Username-->
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        {{ form.username }}
+                        <div class="text-danger">
+                            {{ form.username.errors }}
+                        </div>
+                    </div>
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        {{ form.password }}
+                        <div class="text-danger">
+                            {{ form.password.errors }}
+                        </div>
+                    </div>
+                    <button class="btn btn-success w-100">Login</button>
+                </form>
+                <hr>
+                <p class="text-center">Dont have an account?
+                    <a href="{% url 'register' %}">Register Here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}
+                

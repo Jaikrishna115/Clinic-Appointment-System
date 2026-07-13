@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-primary">
+        👨‍⚕️ Welcome Dr. {{ request.user.first_name }}
+    </h2>
+    <!-- Dashboard Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow text-center border-primary">
+                <div class="card-body">
+                    <h5>Total</h5>
+                    <h2>{{ total }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow text-center border-warning">
+                <div class="card-body">
+                    <h5>Pending</h5>
+                    <h2>{{ pending }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow text-center border-success">
+                <div class="card-body">
+                    <h5>Confirmed</h5>
+                    <h2>{{ confirmed }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow text-center border-info">
+                <div class="card-body">
+                    <h5>Completed</h5>
+                    <h2>{{ completed }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Appointment Table -->
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Appointment List</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <form method="GET" class="row mb-3">
+                    <div class="col-md-4">
+                        <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Search Patient">
+                    </div>
+                    <div class="col-md-3">
+                        <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="PENDING"
+                            {% if selected_status == "PENDING" %}selected{% endif %}>Pending
+                        </option>
+                        <option value="CONFIRMED"
+                            {% if selected_status == "CONFIRMED" %}selected{% endif %}>Confirmed
+                        </option>
+                        <option value="COMPLETED"
+                            {% if selected_status == "COMPLETED" %}selected{% endif %}>Completed
+                        </option>
+                        <option value="CANCELLED"
+                            {% if selected_status == "CANCELLED" %}selected{% endif %}>Cancelled
+                        </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary">Search</button>
+                        <a href="{% url 'doctor_dashboard' %}" class="btn btn-secondary w-100 mt-2">Clear
+                        </a>
+                    </div>
+                </form>
+                <table class="table table-bordered table-hover align-middle text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Patient</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in appointments %}
+                        <tr>
+                            <td>
+                                {{ appointment.patient.user.get_full_name }}
+                            </td>
+                            <td>
+                                {{ appointment.appointment_date }}
+                            </td>
+                            <td>
+                                {{ appointment.appointment_time }}
+                            </td>
+                            <td>
+                                {% if appointment.status == "PENDING" %}
+                                    <span class="badge bg-warning text-dark">
+                                        Pending
+                                    </span>
+                                {% elif appointment.status == "CONFIRMED" %}
+                                    <span class="badge bg-success">
+                                        Confirmed
+                                    </span>
+                                {% elif appointment.status == "COMPLETED" %}
+                                    <span class="badge bg-primary">
+                                        Completed
+                                    </span>
+                                {% elif appointment.status == "CANCELLED" %}
+                                    <span class="badge bg-danger">
+                                        Cancelled
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if appointment.status == "PENDING" %}
+                                    <a href="{% url 'confirm_appointment' appointment.id %}"
+                                       class="btn btn-success btn-sm">
+                                        ✔ Confirm
+                                    </a>
+                                {% elif appointment.status == "CONFIRMED" %}
+                                    <a href="{% url 'complete_appointment' appointment.id %}"
+                                       class="btn btn-primary btn-sm">
+                                        ✔ Complete
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">No Action</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">
+                                No Appointments Found
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if appointments.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link"
+                                href="?page={{ appointments.previous_page_number }}&search={{ search }}&status={{ selected_status }}&date={{ selected_date }}">
+                                Previous
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% for num in appointments.paginator.page_range %}
+                            {% if appointments.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}&search={{ search }}&status={{ selected_status }}&date={{ selected_date }}">
+                                     {{ num }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if appointments.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ appointments.next_page_number }}&search={{ search }}&status={{ selected_status }}&date={{ selected_date }}">Next
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
