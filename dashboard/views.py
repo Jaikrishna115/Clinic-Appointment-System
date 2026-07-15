@@ -44,7 +44,7 @@ def cancel_appointment(request,appointment_id):
             request,
             "Only pending appointments can be cancelled."
         )
-    return redirect("dashboard")
+    return redirect("patient_dashboard")
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -58,53 +58,41 @@ from clinic_.models import Appointment
 
 @login_required
 def doctor_dashboard(request):
-
     doctor = request.user.doctorprofile
-
     appointments = Appointment.objects.select_related(
         "patient__user",
         "doctor__user"
     ).filter(
         doctor=doctor
     )
-
     # Search & Filters
     search = request.GET.get("search")
     status = request.GET.get("status")
     date = request.GET.get("date")
-
     if search:
         appointments = appointments.filter(
             patient__user__first_name__icontains=search
         )
-
     if status:
         appointments = appointments.filter(status=status)
-
     if date:
         appointments = appointments.filter(
             appointment_date=date
         )
-
     # Latest appointments first
     appointments = appointments.order_by(
         "-appointment_date",
         "-appointment_time"
     )
-
     # Counts (Based on Filtered Results)
     total = appointments.count()
     pending = appointments.filter(status="PENDING").count()
     confirmed = appointments.filter(status="CONFIRMED").count()
     completed = appointments.filter(status="COMPLETED").count()
-
     # Pagination
     paginator = Paginator(appointments, 10)
-
     page_number = request.GET.get("page")
-
     appointments = paginator.get_page(page_number)
-
     context = {
         "appointments": appointments,
         "total": total,
@@ -115,7 +103,6 @@ def doctor_dashboard(request):
         "selected_status": status,
         "selected_date": date,
     }
-
     return render(
         request,
         "dashboard/doctor_dashboard.html",

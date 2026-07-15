@@ -31,19 +31,48 @@ def register(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 def user_login(request):
+
     if request.method == "POST":
-        form = UserLoginForm(request, data= request.POST)
+
+        form = UserLoginForm(request, data=request.POST)
+
         if form.is_valid():
+
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
-            user = authenticate(username=username,password=password)
+
+            user = authenticate(
+                request,
+                username=username,
+                password=password,
+            )
+
             if user is not None:
+
                 login(request, user)
-                return redirect("dashboard")
+
+                if user.is_staff:
+                    return redirect("admin_dashboard")
+
+                elif hasattr(user, "doctorprofile"):
+                    return redirect("doctor_dashboard")
+
+                elif hasattr(user, "patientprofile"):
+                    return redirect("patient_dashboard")
+
+                else:
+                    return redirect("home")
+
+        messages.error(request, "Invalid username or password.")
+
     else:
         form = UserLoginForm()
-    return render(request, "accounts/login.html", {"form": form})
 
+    return render(
+        request,
+        "accounts/login.html",
+        {"form": form},
+    )
 @login_required
 def user_logout(request):
     logout(request)

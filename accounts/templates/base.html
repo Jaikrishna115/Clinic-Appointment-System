@@ -63,7 +63,7 @@
                     </li>
                     <li class="nav-item">
                         <span class="nav-link">
-                            👋 Welcome {{ user.first_name }}
+                            👋 Welcome {{ user.username | default:user.get_full_name }}
                             </span>
                     </li>
                     <li class="nav-item">

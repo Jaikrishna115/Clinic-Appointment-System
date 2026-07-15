@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container mt-4">
     <h2 class="mb-4 text-primary">
-        👨‍⚕️ Welcome Dr. {{ request.user.first_name }}
+        👨‍⚕️ Welcome Dr. {{ request.user.username| default:request.user.get_full_name }}
     </h2>
     <!-- Dashboard Cards -->
     <div class="row mb-4">
@@ -87,7 +87,7 @@
                         {% for appointment in appointments %}
                         <tr>
                             <td>
-                                {{ appointment.patient.user.get_full_name }}
+                                {{ appointment.patient.user.get_full_name |default:appointment.patient.user.username }}
                             </td>
                             <td>
                                 {{ appointment.appointment_date }}

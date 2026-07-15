@@ -230,7 +230,7 @@ Example:
 - Function Based Views
 - CRUD Operations
 - QuerySets
-- `select_related()`
+- `select_related()`                      
 - Pagination
 - Search
 - Filtering
