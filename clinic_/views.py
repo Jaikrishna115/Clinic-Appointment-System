@@ -5,7 +5,6 @@ from django.contrib import messages
 from .forms import AppointmentForm, DoctorForm
 from django.contrib.admin.views.decorators import staff_member_required
 
-@login_required
 def home(request):
     return render(request, "clinic_/home.html")
 

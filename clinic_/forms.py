@@ -102,3 +102,28 @@ class DoctorRegistrationForm(forms.ModelForm):
                 "Passwords do not match."
             )
         return cleaned_data
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            if field.widget.input_type == "checkbox":
+                field.widget.attrs["class"] = "form-check-input"
+            else:
+                field.widget.attrs["class"] = "form-control"
+    
+class DoctorUpdateForm(forms.ModelForm):
+    class Meta:
+        model = DoctorProfile
+        fields = [
+            "specialization",
+            "qualifications",
+            "experience",
+            "consultation_fee",
+            "is_available",
+        ]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            if field.widget.input_type == "checkbox":
+               field.widget.attrs["class"] = "form-check-input"
+            else:
+                field.widget.attrs["class"] = "form-control"

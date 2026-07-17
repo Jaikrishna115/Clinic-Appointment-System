@@ -1,16 +1,129 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<div class="text-center mt-5">
-    <h1>🏥 Clinic Appointment System</h1>
-    <h3>
-    {% if request.user.get_full_name %}
-        Welcome {{ request.user.get_full_name }}
-    {% else %}
-        Welcome {{ request.user.username }}
-    {% endif %}
-    </h3>
-    <p> Username: {{request.user.username}} </p>
-    <!--<p> Email : {{request.user.email}}-->
+<!-- Hero Section -->
+<section class="py-5 bg-light rounded shadow-sm">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="display-5 fw-bold text-primary">
+                    Welcome to
+                    <br>
+                    Clinic Appointment System
+                </h1>
+                <p class="lead mt-3">
+                    Book appointments with qualified doctors quickly and easily.
+                    Manage your appointments online anytime.
+                </p>
+                <a href="{% url 'book_appointment' %}"
+                   class="btn btn-primary btn-lg me-2">
+                    Book Appointment
+                </a>
+                <a href="{% url 'login' %}"
+                   class="btn btn-outline-primary btn-lg">
+                    Login
+                </a>
+            </div>
+            <div class="col-md-6 text-center">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/2785/2785482.png"
+                    class="img-fluid"
+                    style="max-height:320px;"
+                    alt="Doctor">
+            </div>
+        </div>
+    </div>
+</section>
 
-</div>
+<!-- Services -->
+<section class="mt-5">
+    <div class="container">
+        <h2 class="text-center mb-4">
+            Our Services
+        </h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <h1>🩺</h1>
+                        <h5>General Physician</h5>
+                        <p>
+                            General health checkups and consultations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <h1>🦷</h1>
+                        <h5>Dental Care</h5>
+                        <p>
+                            Dental cleaning, fillings and treatments.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <h1>👁</h1>
+                        <h5>Eye Care</h5>
+                        <p>
+                            Eye testing and vision consultation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <h1>👂</h1>
+                        <h5>ENT</h5>
+                        <p>
+                            Ear, Nose and Throat specialists.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <h1>🦴</h1>
+                        <h5>Orthopedic</h5>
+                        <p>
+                            Bone, muscle and joint care.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="bg-light py-5 rounded shadow-sm">
+    <div class="container">
+        <h2 class="text-center mb-4">
+            Why Choose Us?
+        </h2>
+        <div class="row text-center">
+            <div class="col-md-3">
+                <h1>✔</h1>
+                <h5>Easy Booking</h5>
+            </div>
+            <div class="col-md-3">
+                <h1>👨‍⚕️</h1>
+                <h5>Qualified Doctors</h5>
+            </div>
+            <div class="col-md-3">
+                <h1>🔒</h1>
+                <h5>Secure Records</h5>
+            </div>
+            <div class="col-md-3">
+                <h1>⏰</h1>
+                <h5>Quick Service</h5>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

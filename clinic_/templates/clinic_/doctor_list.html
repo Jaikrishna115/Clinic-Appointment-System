@@ -1,50 +1,109 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<h2 class="mb-4">
-    👨‍⚕️ Doctor Management
-</h2>
-<a href="{% url 'add_doctor' %}" class="btn btn-success mb-3">
-    + Add Doctor
-</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>
+        👨‍⚕️ Doctor Management
+        <span class="badge bg-primary">
+            {{ total_doctors }}
+        </span>
+    </h2>
+    <a href="{% url 'add_doctor' %}"
+       class="btn btn-success">
+        + Add Doctor
+    </a>
+</div>
+<form method="get" class="mb-3">
+    <input
+        type="text"
+        name="search"
+        value="{{ search }}"
+        class="form-control"
+        placeholder="Search doctor or specialization">
+</form>
 <table class="table table-bordered table-hover">
-    <thead class="table-dark">
-        <tr>
-        <th>Name</th>
-        <th>Specialization</th>
-        <th>Fee</th>
-        <th>Available</th>
-        <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for doctor in doctors %}
-        <tr>
-            <td>
-                {% if doctor.user.get_full_name %}
-                    Dr. {{ doctor.user.get_full_name }}
-                {% else %}
-                    Dr. {{ doctor.user.username }}
-                {% endif %}
-            </td>
-            <td>{{ doctor.specialization }}</td>
-            <td>₹ {{ doctor.consultation_fee }}</td>
-            <td>
-                {% if doctor.is_available %}
-                    <span class="badge bg-success">Available</span>
-                {% else %}
-                    <span class="badge bg-danger">Unavailable</span>
-                {% endif %}
-            </td>
-            <td>
-                <a href="{% url 'edit_doctor' doctor.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{% url 'delete_doctor' doctor.pk %}" class="btn btn-danger btn-sm">Delete</a>
-            </td>
-        </tr>
-    {% empty %}
-        <tr> 
-            <td colspan="5">No Doctors Found</td>
-        </tr>
-    {% endfor %}
+<thead class="table-dark">
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Specialization</th>
+<th>Experience</th>
+<th>Fee</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+{% for doctor in doctors %}
+<tr>
+<td>
+Dr.
+{% if doctor.user.get_full_name %}
+{{ doctor.user.get_full_name }}
+{% else %}
+{{ doctor.user.username }}
+{% endif %}
+</td>
+<td>{{ doctor.user.email }}</td>
+<td>{{ doctor.get_specialization_display }}</td>
+<td>{{ doctor.experience }} Years</td>
+<td>₹ {{ doctor.consultation_fee }}</td>
+<td>
+{% if doctor.is_available %}
+<span class="badge bg-success">
+Available
+</span>
+{% else %}
+<span class="badge bg-danger">
+Unavailable
+</span>
+{% endif %}
+</td>
+<td>
+<a href="{% url 'edit_doctor' doctor.pk %}"
+   class="btn btn-warning btn-sm">
+Edit
+</a>
+<a href="{% url 'delete_doctor' doctor.pk %}"
+   class="btn btn-danger btn-sm"
+   onclick="return confirm('Delete this doctor?')">
+Delete
+</a>
+</td>
+</tr>
+{% empty %}
+<tr>
+<td colspan="7" class="text-center">
+No doctors found.
+</td>
+</tr>
+{% endfor %}
 </tbody>
 </table>
+{% if is_paginated %}
+<nav>
+<ul class="pagination justify-content-center">
+{% if page_obj.has_previous %}
+<li class="page-item">
+<a class="page-link"
+href="?page={{ page_obj.previous_page_number }}&search={{ search }}">
+Previous
+</a>
+</li>
+{% endif %}
+<li class="page-item active">
+<span class="page-link">
+{{ page_obj.number }}
+</span>
+</li>
+{% if page_obj.has_next %}
+<li class="page-item">
+<a class="page-link"
+href="?page={{ page_obj.next_page_number }}&search={{ search }}">
+Next
+</a>
+</li>
+{% endif %}
+</ul>
+</nav>
+{% endif %}
 {% endblock %}
